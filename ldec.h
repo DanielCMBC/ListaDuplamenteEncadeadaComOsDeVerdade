@@ -7,10 +7,10 @@
     #define LIMPAR_TELA "clear"
 #endif
 
-typedef struct No {
+typedef struct No{
     int n;
-    No *prox;
-    No *ant;
+    struct No *prox;
+    struct No *ant;
 }No;
 
-struct No *head = NULL;
+extern No *head = NULL;

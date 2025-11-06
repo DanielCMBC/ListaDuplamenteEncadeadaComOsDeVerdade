@@ -1,4 +1,4 @@
-#include <ldec.h>
+#include "ldec.h"
 
 int main(){
     inserir_No_Inicio(24);

@@ -1,14 +1,4 @@
-#include <ldec.h>
-
-void msg_erro(char *msg){
-    limpar_buffer();
-    system(LIMPAR_TELA);
-    printf("\n----------------Erro------------------------------\n");
-    printf("%s", msg);
-    printf("----------------------------------------------------\n");
-    printf("\nAperte <ENTER> para voltar ao menu principal.");
-    getchar();
-}
+#include "ldec.h"
 
 No* criar_No(int n) {
     No* novoNo = (No*) malloc(sizeof(No));
@@ -22,7 +12,7 @@ No* criar_No(int n) {
     return novoNo;
 }
 
-void inserir_No_Inicio(int n){
+int inserir_No_Inicio(int n){
     struct No* novoNo = criar_No(n);
     if (head == NULL) {
         head->prox = head;
@@ -38,7 +28,7 @@ void inserir_No_Inicio(int n){
     printf("%d inserir no inicio!", n);
 }
 
-void inserir_final(int n){
+int inserir_final(int n){
     struct No* novoNo = criar_No(n);
     if (head == NULL) {
         head = novoNo;
@@ -50,48 +40,44 @@ void inserir_final(int n){
     printf("inserir %d no final\n", n);
 }
 
-void deletar_Elemento_porTecla(int key) {
-    if (head == NULL)  {
-        printf("A lista esta vazia! Nada para deletar");
-    return;
-    }
-
-    No *curr = head, *ant_1 = NULL;
-    while(curr->n !=key) {
-        if(curr->prox==head) {
-            printf("No com o valor %d\n", key);
-            return;
-        }
-        ant_1 = curr;
-        curr = curr->prox;
-    }
-
-    if (curr->prox == head && ant_1 == NULL) {
-        head = NULL;
-        free(curr);
-        printf("Elemento %d deletado\n", key);
+int deletar_Elemento_porTecla(int key) {
+    if (head == NULL) {
+        printf("A lista está vazia! Nada para deletar.\n");
         return;
     }
-    //se for o primeiro No
 
-    if(curr == head) {
-        struct No* ultimo = head->ant;
-        head=head->prox;
-        ultimo->prox = head;
+    No *curr = head;
+
+    // Buscar o nó
+    while (curr->n != key) {
+        curr = curr->prox;
+        if (curr == head) {
+            printf("Nó com valor %d não encontrado.\n", key);
+            return;
+        }
+    }
+
+    // Caso: apenas um nó
+    if (curr->prox == head && curr->ant == head) {
+        head = NULL;
+        free(curr);
+        printf("Elemento %d deletado.\n", key);
+        return;
+    }
+
+    // Caso: nó é o primeiro
+    if (curr == head) {
+        No *ultimo = head->ant;
+        head = head->prox;
         head->ant = ultimo;
-        free(curr);
-    }
-    else if(curr->prox==head) {
-        ant_1->prox=head;
-        head->ant = ant_1;
-        free(curr);
-    }
-    else{
+        ultimo->prox = head;
+    } else {
         curr->ant->prox = curr->prox;
         curr->prox->ant = curr->ant;
-        free(curr);
     }
-    printf("Elemento %d deletado\n", key);
+
+    free(curr);
+    printf("Elemento %d deletado.\n", key);
 }
 
 void mostrar() {
