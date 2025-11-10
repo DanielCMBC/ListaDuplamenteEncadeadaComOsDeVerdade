@@ -37,7 +37,7 @@ int main(){
             printf("Erro! Nenhhuma Thread Disponivel.\n");
         break;
         }
-        printf("Thread Escalonado para Tarefa \n", thread_atual->n);
+        printf("Thread Escalonado para Tarefa %d\n", thread_atual->n);
         PAUSA(500);
 
         //Verifica se o nucleo esta realizando uma operacao
