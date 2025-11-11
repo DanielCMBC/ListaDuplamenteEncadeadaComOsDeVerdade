@@ -290,3 +290,18 @@ Ao alcançar o nó 2, o sistema interrompeu o ciclo, simbolizando que o núcleo 
 - Todos os nós foram desalocados em sequência, garantindo que não há vazamento de memória.
 
 A mensagem "Lista esta vazia!" confirma o sucesso da limpeza.
+
+*8. Compilação e Execução do Código.*
+
+Para compilar o projeto, é necessário ter um compilador C instalado (como GCC).
+Os três arquivos — main.c, ldec.c e ldec.h — devem estar na mesma pasta.
+
+- Passos para Compilação (no terminal):
+
+No terminal do codespaces:
+
+gcc main.c ldec.c -o simulador
+
+E execute com:
+
+./simulador
