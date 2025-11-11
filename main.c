@@ -5,7 +5,7 @@
 
 // Inclui bibliotecas para a pausa (sleep)
 #ifdef _WIN32
-include <windows.h>
+include <windows.h> //Simular processo de execucao em um Sistema Operacional Windows
 #define PAUSA(ms) Sleep(ms)
 #else
 #include <unistd.h>
@@ -18,7 +18,7 @@ int main(){
     for (int i = 0; i < num_nucleos; i++){
         inserir_final(i);
     }
-    printf("--- Simulado de CPU ---\n");
+    printf("\n--- Simulador de CPU ---\n");
     printf("--- Sistema inicializado com %d nucleos ---\n",num_nucleos);
     mostrar();
 
@@ -37,8 +37,13 @@ int main(){
             printf("Erro! Nenhhuma Thread Disponivel.\n");
         break;
         }
-        printf("Thread Escalonado para Tarefa %d\n", thread_atual->n);
-        PAUSA(500);
+        printf("Thread Escalonado para Tarefa %d \n", thread_atual->n);
+
+        // Gerar uma duração aleatória para a tarefa (em milissegundos)
+        int tempo_tarefa = rand() % 30000 + 5000; // Duração aleatória num intervalo de tempo
+        printf(">>> A tarefa será executada por %d milissegundos <<<\n", tempo_tarefa);
+        PAUSA(tempo_tarefa); // Simula a execução da tarefa
+
 
         //Verifica se o nucleo esta realizando uma operacao
         if(thread_atual-> n == nucleo_alvo) {
