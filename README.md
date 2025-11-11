@@ -180,11 +180,14 @@ for (int i = 0; i < num_nucleos; i++){
 }
 mostrar();
 
+O 'int num_nucleos' representa a quantidade de nucleos que estaram participando da simulação.
 
 *Saída esperada:*
 
 --- Lista Duplamente Encadeada Circular ---
 0 <-> 1 <-> 2 <-> 3 <-> (Volta ao HEAD 0)
+
+(Representação de uma Lista Duplamente Encadeada Circular)
 
 5.2. Escalonamento de Threads:
 
@@ -209,7 +212,6 @@ while (executando) {
     }
 }
 
-
 *Exemplo de saída simulada:*
 
 Thread Escalonado para Tarefa 0
@@ -218,6 +220,8 @@ Thread Escalonado para Tarefa 1
 >>>Thread 1 em espera<<<
 Thread Escalonado para Tarefa 2
 >>>Nucleo 2 encontrou e executou a operacao! <<<
+
+A  Operação pecorreu os núcleos até chegar no núcleo que foi selecionado para executar a operação
 
 **6. Conclusão:**
 
@@ -230,7 +234,7 @@ Conceitos reforçados:
 
 - Estruturas dinâmicas (malloc/free);
 
-- ontrole de fluxo e travessia circular;
+- Controle de fluxo e travessia circular;
 
 - Simulação de escalonamento de tarefas.
 
