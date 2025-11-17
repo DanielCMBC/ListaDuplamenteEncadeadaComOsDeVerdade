@@ -2,20 +2,24 @@
 
 No *head = NULL;
 
-No* criar_No(int n) {
+No* criar_No(int id) {
     No* novoNo = (No*) malloc(sizeof(No));
     if (novoNo == NULL){
-        printf("'Alocacao de Memoria Falhou!/n");
+        printf("Erro de memoria!\n");
         exit(1);
     }
-    novoNo->n = n;
+    novoNo->id = id;
+    
+    // Intervalo de tempo dado para executar uma tarefa
+    novoNo->tempo_restante = (rand() % 4000) + 2000; 
+    
     novoNo->prox = NULL;
     novoNo->ant = NULL;
     return novoNo;
 }
 
-void inserir_No_Inicio(int n){
-    struct No* novoNo = criar_No(n);
+void inserir_No_Inicio(int id, int tempo){
+    struct No* novoNo = criar_No(id);
     if (head == NULL) {
         head = novoNo;
         head->prox = head;
@@ -28,11 +32,11 @@ void inserir_No_Inicio(int n){
         ultimo->prox = novoNo;
     head = novoNo;
     }
-    printf("%d inserido no inicio!\n", n);
+    printf("Processo [ID: %d] criado (Duracao: %dms)\n", id, tempo);
 }
 
-void inserir_final(int n){
-    struct No* novoNo = criar_No(n);
+void inserir_final(int id, int tempo){
+    struct No* novoNo = criar_No(id);
     if (head == NULL) {
         head = novoNo;
         head->prox = head;
@@ -44,57 +48,52 @@ void inserir_final(int n){
         ultimo->prox = novoNo;
         head->ant = novoNo;
     }
-    printf("inserido %d no final\n", n);
+    printf("Processo [ID: %d] criado (Duracao: %dms)\n", id, tempo);
 }
 
-void deletar_Elemento_porTecla(int key) {
-    if (head == NULL) {
-        printf("A lista está vazia! Nada para deletar.\n");
-    return;
-    }
+void deletar_Elemento_porID(int key) {
+    if (head == NULL) return;
 
     No *curr = head;
 
-    while (curr->n != key) {
-        curr = curr->prox;
-        if (curr == head) {
-            printf("Nó com valor %d não encontrado.\n", key);
-        return;
-        }
+    do {
+        if(curr->id==key) break;
+        curr= curr -> prox;
+    } while (curr != head);
+
+    if(curr->id!=key) {
+        printf("ID %d nao encontrado.\n", key);
     }
 
-    if (curr->prox == head && curr->ant == head) {
+    // Se for o único elemento
+    if (curr->prox == curr) {
         head = NULL;
         free(curr);
-        printf("Elemento %d deletado.\n", key);
         return;
     }
 
+    // Se for o head, move o head para frente antes de apagar
     if (curr == head) {
-        No *ultimo = head->ant;
         head = head->prox;
-        head->ant = ultimo;
-        ultimo->prox = head;
-     } else {
-         curr->ant->prox = curr->prox;
-         curr->prox->ant = curr->ant;
     }
 
-    free(curr);
-    printf("Elemento %d deletado.\n", key);
-}
+    // Ajusta os ponteiros
+    curr->ant->prox = curr->prox;
+    curr->prox->ant = curr->ant;
 
+    free(curr);
+}
 void mostrar() {
     if(head == NULL) {
-        printf("Lista esta vazia!\n");
-    return;
+        printf("Todos os processos finalizados! Lista vazia.\n");
+        return;
     }
 
     struct No* current = head;
-    printf("\n--- Lista Duplamente Encadeada Circular ---\n");
+    printf("\n--- Fila de Processos ---\n");
     do {
-        printf("%d <-> ", current->n);
+        printf("[P%d | %dms] <-> ", current->id, current->tempo_restante);
         current = current->prox;
     } while(current != head);
-    printf("(Volta ao HEAD %d)\n", head->n);
+    printf("(Volta)\n");
 }
