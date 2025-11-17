@@ -1,68 +1,50 @@
 #include "ldec.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h> // Para sortear o número aleatório
+#include <time.h>
 
-// Inclui bibliotecas para a pausa (sleep)
-#ifdef _WIN32
-include <windows.h> //Simular processo de execucao em um Sistema Operacional Windows
-#define PAUSA(ms) Sleep(ms)
-#else
-#include <unistd.h>
-#define PAUSA(ms) usleep(ms * 1000) // usleep é em microssegundos
-#endif
+#define QUANTUM 1500 // Tempo máximo por vez de nucleos da CPU
+
 int main(){
-    srand(time(NULL));
+    srand(time(NULL)); //Geracao de tempos diferentes para cada tarefa
 
     int num_nucleos = 4;
-    for (int i = 0; i < num_nucleos; i++){
+    
+    printf("--- Criando Processos ---\n");
+    for (int i = 1; i <= num_nucleos; i++){
         inserir_final(i);
     }
-    printf("\n--- Simulador de CPU ---\n");
-    printf("--- Sistema inicializado com %d nucleos ---\n",num_nucleos);
-    mostrar();
 
-    //Sortear um Nucleo para Executar uma tarefa
-    int nucleo_alvo = rand() % num_nucleos;
-    printf("\n***Tarefa especial designada para a thread %d\n\n", nucleo_alvo);
+    printf("\n--- INICIANDO ROUND ROBIN (Quantum: %dms) ---\n", QUANTUM);
     PAUSA(2000);
+
+    No* atual = head;
     
-    //escalonador de Threads (Loop)
-
-    No* thread_atual = head;
-    int executando = 1;
-
-    while(executando) {
-        if(thread_atual == NULL){
-            printf("Erro! Nenhhuma Thread Disponivel.\n");
-        break;
-        }
-        printf("Thread Escalonado para Tarefa %d \n", thread_atual->n);
-
-        // Gerar uma duração aleatória para a tarefa (em milissegundos)
-        int tempo_tarefa = rand() % 30000 + 5000; // Duração aleatória num intervalo de tempo
-        printf(">>> A tarefa será executada por %d milissegundos <<<\n", tempo_tarefa);
-        PAUSA(tempo_tarefa); // Simula a execução da tarefa
-
-
-        //Verifica se o nucleo esta realizando uma operacao
-        if(thread_atual-> n == nucleo_alvo) {
-            printf(">>>Nucleo %d encontrou e executou a operacao! <<<\n",thread_atual->n);
-            executando = 0;
+    while(head != NULL) {
+        //Processamento
+        printf("\nProcessando [P%d] (Resta: %dms)\n", atual->id, atual->tempo_restante);
+        
+        int tempo_gasto;
+        
+        if (atual->tempo_restante > QUANTUM) {
+            tempo_gasto = QUANTUM;
+            atual->tempo_restante -= QUANTUM;
+            PAUSA(tempo_gasto); // Simulacao da execução da tarefa
+            
+            printf("   -> Interrompido! Falta %dms\n", atual->tempo_restante);
+            atual = atual->prox;
         } else {
-            printf(">>>Thread %d em espera<<<\n",thread_atual->n);
-            thread_atual = thread_atual->prox;
+            tempo_gasto = atual->tempo_restante;
+            atual->tempo_restante = 0;
+            PAUSA(tempo_gasto);
+            
+            printf("   -> FINALIZADO!\n");
+            No* prox_temp = atual->prox;
+            deletar_Elemento_porID(atual->id);
+            atual = prox_temp;
         }
+     
+        PAUSA(500); 
     }
-    //Limpeza
-    printf("\n--- Simulação Finalizada ---\n");
-    printf("Desalocando todos os núcleos...\n");
 
-    //Deletar TODOS os Nos (Um por Um)
-
-    while (head != NULL) {
-        deletar_Elemento_porTecla(head->n);
-    }
-    mostrar();
+    printf("\nTodos os processos finalizados.\n");
     return 0;
 }
