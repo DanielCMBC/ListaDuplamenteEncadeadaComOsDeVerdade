@@ -5,22 +5,25 @@
 #include <stdlib.h>
 
 #ifdef _WIN32
-    #define LIMPAR_TELA "cls"
+    #include <windows.h>
+    #define PAUSA(ms) Sleep(ms)
 #else
-    #define LIMPAR_TELA "clear"
+    #include <unistd.h>
+    #define PAUSA(ms) usleep(ms * 1000)
 #endif
 
 typedef struct No{
-    int n;
+    int n;              
+    int tempo_restante;
     struct No *prox;
     struct No *ant;
-}No;
+} No;
 
 extern No *head;
 
-No* criar_No(int n);
-void inserir_No_Inicio(int n); 
-void inserir_final(int n);     
+// PROTÓTIPOS: Note que só pedimos "int n"
+No* criar_No(int id);
+void inserir_final(int id);     
 void deletar_Elemento_porTecla(int key); 
 void mostrar();
 
@@ -43,3 +46,4 @@ int conectados(Grafo *g, int a, int b);
 void mostrarGrafo(Grafo *g);
 
 #endif
+

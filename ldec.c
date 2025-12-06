@@ -3,6 +3,7 @@
 No *head = NULL;
 Grafo grafo;
 
+
 /* verifica se já existe um nó com o mesmo ID */
 static int existeNo(int id) {
     if (head == NULL) return 0;
@@ -13,7 +14,6 @@ static int existeNo(int id) {
     } while (cur != head);
     return 0;
 }
-
 
 No* criar_No(int n) {
     No* novoNo = (No*) malloc(sizeof(No));
@@ -162,6 +162,7 @@ void mostrar() {
     } while(current != head);
     printf("(Volta ao HEAD %d)\n", head->n);
 }
+
 
 void inicializarGrafo(Grafo *g) {
     g->numVertices = 0;
