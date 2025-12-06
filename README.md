@@ -316,13 +316,13 @@ E execute com:
 
 Este relatório apresenta o funcionamento do programa desenvolvido em C que integra:
 
-Uma Lista Duplamente Encadeada Circular (LDEC) para gerenciar núcleos;
+- Uma Lista Duplamente Encadeada Circular (LDEC) para gerenciar núcleos;
 
-Um grafo baseado em matriz de adjacência, representando conexões entre esses núcleos;
+- Um grafo baseado em matriz de adjacência, representando conexões entre esses núcleos;
 
-Algoritmos de BFS e DFS para percorrer o grafo;
+- Algoritmos de BFS e DFS para percorrer o grafo;
 
-Um simulador de CPU que usa a lista circular como escalonador (round-robin).
+- Um simulador de CPU que usa a lista circular como escalonador (round-robin).
 
 O sistema permite ao usuário criar núcleos, conectá-los, visualizar suas relações e simular o comportamento de threads em um ambiente de execução contínuo.
 
@@ -343,21 +343,21 @@ typedef struct No {
 
 Características da LDEC:
 
-O último nó aponta para o primeiro (circularidade).
+- O último nó aponta para o primeiro (circularidade).
 
-Cada nó possui ponteiros para o próximo e o anterior.
+- Cada nó possui ponteiros para o próximo e o anterior.
 
-Facilita percursos contínuos (ideal para simulador de CPU).
+- Facilita percursos contínuos (ideal para simulador de CPU).
 
 Operações principais:
 
-inserir_No_Inicio(int n)
+- inserir_No_Inicio(int n)
 
-inserir_final(int n)
+- inserir_final(int n)
 
-mostrar()
+- mostrar()
 
-deletar_Elemento_porTecla(int key)
+- deletar_Elemento_porTecla(int key)
 
 O programa inicia automaticamente com 4 núcleos:
 
@@ -367,23 +367,23 @@ O programa inicia automaticamente com 4 núcleos:
 
 O grafo representa as conexões entre núcleos, usando uma matriz NxN:
 
-0 indica ausência de conexão,
+- 0 indica ausência de conexão.
 
-1 indica ligação direta entre dois núcleos.
+- 1 indica ligação direta entre dois núcleos.
 
 Funções utilizadas:
 
-inicializarGrafo(&grafo)
+- inicializarGrafo(&grafo)
 
-adicionarAresta(&grafo, a, b)
+- adicionarAresta(&grafo, a, b)
 
-mostrarGrafo(&grafo)
+- mostrarGrafo(&grafo)
 
-BFS(&grafo, origem)
+- BFS(&grafo, origem)
 
-DFS(&grafo, origem)
+- DFS(&grafo, origem)
 
-conectados(&grafo, a, b)
+- conectados(&grafo, a, b)
 
 O usuário cria arestas manualmente, escolhendo dois IDs.
 
@@ -393,21 +393,21 @@ A função simuladorCPU() simula um ambiente de escalonamento de threads usando 
 
 Processo:
 
-Conta quantos núcleos existem na lista.
+1. Conta quantos núcleos existem na lista.
 
-Escolhe um núcleo aleatório como alvo.
+2. Escolhe um núcleo aleatório como alvo.
 
-Percorre a lista circular, dando tempo de CPU para cada núcleo.
+3. Percorre a lista circular, dando tempo de CPU para cada núcleo.
 
-Cada núcleo executa uma “tarefa” por um tempo aleatório.
+4. Cada núcleo executa uma “tarefa” por um tempo aleatório.
 
-Quando o núcleo alvo é alcançado, a simulação termina.
+5. Quando o núcleo alvo é alcançado, a simulação termina.
 
 Esse processo demonstra:
 
-Alternância entre núcleos;
+- Alternância entre núcleos;
 
-Execução contínua;
+- Execução contínua.
 
 Dependência da LDEC para escalonamento circular.
 
@@ -415,33 +415,54 @@ Dependência da LDEC para escalonamento circular.
 
 O programa apresenta o seguinte menu:
 
-========= MENU =========
-1 - Inserir núcleo no início
-2 - Inserir núcleo no final
-3 - Mostrar lista circular
-4 - Criar conexão entre dois núcleos
-5 - Mostrar grafo (matriz de adjacência)
-6 - BFS a partir de um núcleo
-7 - DFS a partir de um núcleo
-8 - Verificar se dois núcleos estão conectados
-9 - Executar simulador de CPU
-0 - Sair
-========================
+========= MENU ========= 
 
+1 - Inserir núcleo no início 
+
+2 - Inserir núcleo no final 
+
+3 - Mostrar lista circular 
+
+4 - Criar conexão entre dois núcleos 
+
+5 - Mostrar grafo (matriz de adjacência) 
+
+6 - BFS a partir de um núcleo 
+
+7 - DFS a partir de um núcleo 
+
+8 - Verificar se dois núcleos estão conectados 
+
+9 - Executar simulador de CPU 
+
+0 - Sair 
+
+======================== 
 
 Resumo das ações:
 
-Opção	Descrição
-1	Adiciona núcleo no início da lista
-2	Adiciona núcleo no final
-3	Exibe todos os núcleos na lista circular
-4	Cria uma aresta (conexão) entre dois IDs
-5	Exibe a matriz de adjacência do grafo
-6	Executa BFS a partir de um núcleo escolhido
-7	Executa DFS
-8	Testa se dois núcleos são conectados
-9	Rodar a simulação da CPU
-0	Encerrar o programa
+Opção:	
+
+1. Inserir núcleo no início: Adiciona núcleo no início da lista 
+
+2. Inserir núcleo no final:	Adiciona núcleo no final. 
+
+3. Mostrar lista circular:	Exibe todos os núcleos na lista circular.
+
+4. Criar conexão entre dois núcleos: Cria uma aresta (conexão) entre dois IDs.
+
+5. Mostrar grafo (matriz de adjacência): Exibe a matriz de adjacência do grafo. 
+
+6. BFS a partir de um núcleo: Executa BFS a partir de um núcleo escolhido. 
+
+7. DFS a partir de um núcleo: Executa DFS. 
+
+8. Verificar se dois núcleos estão conectados: Testa se dois núcleos são conectados. 
+
+9. Executar simulador de CPU: Rodar a simulação da CPU. 
+
+0. Sair: Encerrar o programa.
+
 
 ## 4. Fluxo de Execução do Programa
 ### 4.1 Inicialização

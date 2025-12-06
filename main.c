@@ -21,7 +21,7 @@ void menu() {
     printf("6 - BFS a partir de um núcleo\n");
     printf("7 - DFS a partir de um núcleo\n");
     printf("8 - Verificar se dois núcleos estão conectados\n");
-    printf("9 - Executar simulador de CPU (original)\n");
+    printf("9 - Executar simulador de CPU\n");
     printf("0 - Sair\n");
     printf("========================\n");
     printf("Escolha: ");
