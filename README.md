@@ -309,3 +309,192 @@ gcc main.c ldec.c -o simulador
 E execute com:
 
 ./simulador
+
+# Implementação de grafos no Simulador de Processador.
+
+## 1. Introdução
+
+Este relatório apresenta o funcionamento do programa desenvolvido em C que integra:
+
+Uma Lista Duplamente Encadeada Circular (LDEC) para gerenciar núcleos;
+
+Um grafo baseado em matriz de adjacência, representando conexões entre esses núcleos;
+
+Algoritmos de BFS e DFS para percorrer o grafo;
+
+Um simulador de CPU que usa a lista circular como escalonador (round-robin).
+
+O sistema permite ao usuário criar núcleos, conectá-los, visualizar suas relações e simular o comportamento de threads em um ambiente de execução contínuo.
+
+## 2. Estrutura Geral do Sistema
+
+O código é composto por três pilares principais: lista ligada circular, grafo, e simulador.
+
+### 2.1 Lista Duplamente Encadeada Circular
+
+Cada núcleo é representado pela seguinte estrutura:
+
+typedef struct No {
+    int n;
+    struct No *prox;
+    struct No *ant;
+} No;
+
+
+Características da LDEC:
+
+O último nó aponta para o primeiro (circularidade).
+
+Cada nó possui ponteiros para o próximo e o anterior.
+
+Facilita percursos contínuos (ideal para simulador de CPU).
+
+Operações principais:
+
+inserir_No_Inicio(int n)
+
+inserir_final(int n)
+
+mostrar()
+
+deletar_Elemento_porTecla(int key)
+
+O programa inicia automaticamente com 4 núcleos:
+
+0 → 1 → 2 → 3 → retorna ao 0
+
+### 2.2 Grafo — Matriz de Adjacência
+
+O grafo representa as conexões entre núcleos, usando uma matriz NxN:
+
+0 indica ausência de conexão,
+
+1 indica ligação direta entre dois núcleos.
+
+Funções utilizadas:
+
+inicializarGrafo(&grafo)
+
+adicionarAresta(&grafo, a, b)
+
+mostrarGrafo(&grafo)
+
+BFS(&grafo, origem)
+
+DFS(&grafo, origem)
+
+conectados(&grafo, a, b)
+
+O usuário cria arestas manualmente, escolhendo dois IDs.
+
+### 2.3 Simulador de CPU
+
+A função simuladorCPU() simula um ambiente de escalonamento de threads usando o conceito de round-robin.
+
+Processo:
+
+Conta quantos núcleos existem na lista.
+
+Escolhe um núcleo aleatório como alvo.
+
+Percorre a lista circular, dando tempo de CPU para cada núcleo.
+
+Cada núcleo executa uma “tarefa” por um tempo aleatório.
+
+Quando o núcleo alvo é alcançado, a simulação termina.
+
+Esse processo demonstra:
+
+Alternância entre núcleos;
+
+Execução contínua;
+
+Dependência da LDEC para escalonamento circular.
+
+## 3. Funcionamento do Menu Principal
+
+O programa apresenta o seguinte menu:
+
+========= MENU =========
+1 - Inserir núcleo no início
+2 - Inserir núcleo no final
+3 - Mostrar lista circular
+4 - Criar conexão entre dois núcleos
+5 - Mostrar grafo (matriz de adjacência)
+6 - BFS a partir de um núcleo
+7 - DFS a partir de um núcleo
+8 - Verificar se dois núcleos estão conectados
+9 - Executar simulador de CPU
+0 - Sair
+========================
+
+
+Resumo das ações:
+
+Opção	Descrição
+1	Adiciona núcleo no início da lista
+2	Adiciona núcleo no final
+3	Exibe todos os núcleos na lista circular
+4	Cria uma aresta (conexão) entre dois IDs
+5	Exibe a matriz de adjacência do grafo
+6	Executa BFS a partir de um núcleo escolhido
+7	Executa DFS
+8	Testa se dois núcleos são conectados
+9	Rodar a simulação da CPU
+0	Encerrar o programa
+
+## 4. Fluxo de Execução do Programa
+### 4.1 Inicialização
+
+O grafo é criado vazio.
+
+4 núcleos (0 a 3) são inseridos automaticamente na lista circular.
+
+### 4.2 Execução Interativa
+
+O usuário pode:
+
+- expandir a lista de núcleos,
+
+- construir conexões na matriz de adjacência,
+
+- percorrer o grafo via BFS/DFS,
+
+- verificar se dois nós estão conectados,
+
+- simular a execução de threads.
+
+## 5. Limpeza de Memória
+
+Ao finalizar a execução (opção 0), o programa libera dinamicamente toda a memória da lista circular:
+
+while (head != NULL) {
+    deletar_Elemento_porTecla(head->n);
+}
+
+
+Esse processo evita vazamento de memória e encerra o programa corretamente.
+
+## 6. Conclusão
+
+O programa combina conceitos fundamentais de Estruturas de Dados e Sistemas Operacionais, apresentando:
+
+- Uma lista circular que simula um escalonador round-robin;
+
+- Um grafo que armazena conexões entre núcleos;
+
+- Algoritmos clássicos de busca (BFS e DFS);
+
+- Uma simulação interativa que demonstra como núcleos podem receber tempo de processamento de forma sequencial e contínua.
+
+A modularidade do projeto permite futuras expansões, como:
+
+- validação automática de IDs,
+
+- geração automatizada de conexões,
+
+- remoção de núcleos,
+
+- estatísticas de uso,
+
+- modos avançados de simulação.
