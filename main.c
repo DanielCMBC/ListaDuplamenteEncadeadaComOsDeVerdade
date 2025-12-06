@@ -13,14 +13,15 @@
 
 void menu() {
     printf("\n========= MENU =========\n");
-    printf("1 - Gerar automaticamente N núcleos (1 até N)\n");
-    printf("2 - Mostrar lista circular\n");
-    printf("3 - Criar automaticamente conexões aleatórias\n");
-    printf("4 - Mostrar grafo (matriz de adjacência)\n");
-    printf("5 - BFS a partir de um núcleo\n");
-    printf("6 - DFS a partir de um núcleo\n");
-    printf("7 - Verificar se dois núcleos estão conectados\n");
-    printf("8 - Executar simulador de CPU\n");
+    printf("1 - Inserir núcleo no início\n");
+    printf("2 - Inserir núcleo no final\n");
+    printf("3 - Mostrar lista circular\n");
+    printf("4 - Criar conexão entre dois núcleos\n");
+    printf("5 - Mostrar grafo (matriz de adjacência)\n");
+    printf("6 - BFS a partir de um núcleo\n");
+    printf("7 - DFS a partir de um núcleo\n");
+    printf("8 - Verificar se dois núcleos estão conectados\n");
+    printf("9 - Executar simulador de CPU (original)\n");
     printf("0 - Sair\n");
     printf("========================\n");
     printf("Escolha: ");
@@ -45,7 +46,7 @@ void simuladorCPU() {
     printf("--- Sistema inicializado com %d nucleos ---\n", num_nucleos);
     mostrar();
 
-    int nucleo_alvo = (rand() % num_nucleos) + 1;
+    int nucleo_alvo = rand() % num_nucleos;
     printf("\n*** Tarefa especial designada para a thread %d\n\n", nucleo_alvo);
     PAUSA(2000);
 
@@ -77,91 +78,57 @@ int main() {
     int opcao;
     int a, b, valor;
 
+    // Inicializar com 4 núcleos como antes
+    for (int i = 0; i < 4; i++)
+        inserir_final(i);
+
     do {
         menu();
         scanf("%d", &opcao);
 
         switch(opcao) {
 
-            case 1: { // Gerar automaticamente N núcleos
-                printf("Digite quantos núcleos deseja criar: ");
+            case 1:
+                printf("Digite o ID do núcleo: ");
                 scanf("%d", &valor);
-
-                if (valor <= 0) {
-                    printf("Valor invalido!\n");
-                    break;
-                }
-
-                // Limpa lista anterior
-                while (head != NULL)
-                    deletar_Elemento_porTecla(head->n);
-
-                // Cria núcleos de 1 até N
-                for (int i = 1; i <= valor; i++)
-                    inserir_final(i);
-
-                printf("Foram criados %d nucleos (1 ate %d)\n", valor, valor);
+                inserir_No_Inicio(valor);
                 break;
-            }
 
             case 2:
+                printf("Digite o ID do núcleo: ");
+                scanf("%d", &valor);
+                inserir_final(valor);
+                break;
+
+            case 3:
                 mostrar();
                 break;
 
-
-            case 3: {
-
-                int totalConexoes;
-                printf("Quantas conexões aleatórias deseja criar? ");
-                scanf("%d", &totalConexoes);
-
-                if (head == NULL) {
-                printf("Nao ha nucleos cadastrados!\n");
-                break;
-            }
-
-            int num_nucleos = 0;
-              No* tmp = head;
-              do {
-              num_nucleos++;
-              tmp = tmp->prox;
-            } while (tmp != head);
-
-            printf("Gerando %d conexoes aleatórias...\n", totalConexoes);
-
-             for (int i = 0; i < totalConexoes; i++) {
-             int a, b;
-
-            do {
-            a = (rand() % num_nucleos) + 1;
-            b = (rand() % num_nucleos) + 1;
-            } while (a == b);  // evitar conexao de um nodo com ele mesmo
-
-            printf("Criando aresta aleatória: %d <-> %d\n", a, b);
-            adicionarAresta(&grafo, a, b);
-         }
-
-          printf("Conexões aleatórias criadas com sucesso!\n");
-          break;
-        }
-    
             case 4:
-                mostrarGrafo(&grafo);
+                printf("Criar conexao (aresta)\nID 1: ");
+                scanf("%d", &a);
+                printf("ID 2: ");
+                scanf("%d", &b);
+                adicionarAresta(&grafo, a, b);
                 break;
 
             case 5:
+                mostrarGrafo(&grafo);
+                break;
+
+            case 6:
                 printf("BFS a partir de qual núcleo? ");
                 scanf("%d", &a);
                 BFS(&grafo, a);
                 break;
 
-            case 6:
+            case 7:
                 printf("DFS a partir de qual núcleo? ");
                 scanf("%d", &a);
                 DFS(&grafo, a);
                 break;
 
-            case 7:
+            case 8:
                 printf("Verificar conexao entre:\nID 1: ");
                 scanf("%d", &a);
                 printf("ID 2: ");
@@ -173,7 +140,7 @@ int main() {
                     printf("Núcleos %d e %d NÃO estão conectados.\n", a, b);
                 break;
 
-            case 8:
+            case 9:
                 simuladorCPU();
                 break;
 
@@ -187,9 +154,11 @@ int main() {
 
     } while(opcao != 0);
 
+    // Limpeza da lista circular
     printf("\nLimpando memória...\n");
-    while (head != NULL)
+    while (head != NULL) {
         deletar_Elemento_porTecla(head->n);
+    }
 
     return 0;
 }
