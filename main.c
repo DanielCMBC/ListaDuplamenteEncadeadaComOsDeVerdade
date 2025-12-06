@@ -1,68 +1,164 @@
 #include "ldec.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h> // Para sortear o número aleatório
+#include <time.h>
 
-// Inclui bibliotecas para a pausa (sleep)
 #ifdef _WIN32
-include <windows.h> //Simular processo de execucao em um Sistema Operacional Windows
+#include <windows.h>
 #define PAUSA(ms) Sleep(ms)
 #else
 #include <unistd.h>
-#define PAUSA(ms) usleep(ms * 1000) // usleep é em microssegundos
+#define PAUSA(ms) usleep(ms * 1000)
 #endif
-int main(){
+
+void menu() {
+    printf("\n========= MENU =========\n");
+    printf("1 - Inserir núcleo no início\n");
+    printf("2 - Inserir núcleo no final\n");
+    printf("3 - Mostrar lista circular\n");
+    printf("4 - Criar conexão entre dois núcleos\n");
+    printf("5 - Mostrar grafo (matriz de adjacência)\n");
+    printf("6 - BFS a partir de um núcleo\n");
+    printf("7 - DFS a partir de um núcleo\n");
+    printf("8 - Verificar se dois núcleos estão conectados\n");
+    printf("9 - Executar simulador de CPU (original)\n");
+    printf("0 - Sair\n");
+    printf("========================\n");
+    printf("Escolha: ");
+}
+
+void simuladorCPU() {
+    if (head == NULL) {
+        printf("Nao ha nucleos para simular.\n");
+        return;
+    }
+
+    int num_nucleos = 0;
+    No* temp = head;
+    do {
+        num_nucleos++;
+        temp = temp->prox;
+    } while (temp != head);
+
     srand(time(NULL));
 
-    int num_nucleos = 4;
-    for (int i = 0; i < num_nucleos; i++){
-        inserir_final(i);
-    }
     printf("\n--- Simulador de CPU ---\n");
-    printf("--- Sistema inicializado com %d nucleos ---\n",num_nucleos);
+    printf("--- Sistema inicializado com %d nucleos ---\n", num_nucleos);
     mostrar();
 
-    //Sortear um Nucleo para Executar uma tarefa
     int nucleo_alvo = rand() % num_nucleos;
-    printf("\n***Tarefa especial designada para a thread %d\n\n", nucleo_alvo);
+    printf("\n*** Tarefa especial designada para a thread %d\n\n", nucleo_alvo);
     PAUSA(2000);
-    
-    //escalonador de Threads (Loop)
 
     No* thread_atual = head;
     int executando = 1;
 
     while(executando) {
-        if(thread_atual == NULL){
-            printf("Erro! Nenhhuma Thread Disponivel.\n");
-        break;
-        }
-        printf("Thread Escalonado para Tarefa %d \n", thread_atual->n);
+        printf("\nThread escalonada para tarefa: %d\n", thread_atual->n);
 
-        // Gerar uma duração aleatória para a tarefa (em milissegundos)
-        int tempo_tarefa = rand() % 30000 + 5000; // Duração aleatória num intervalo de tempo
-        printf(">>> A tarefa será executada por %d milissegundos <<<\n", tempo_tarefa);
-        PAUSA(tempo_tarefa); // Simula a execução da tarefa
+        int tempo_tarefa = rand() % 3000 + 1000;
+        printf(">>> Tarefa por %d ms...\n", tempo_tarefa);
+        PAUSA(tempo_tarefa);
 
-
-        //Verifica se o nucleo esta realizando uma operacao
-        if(thread_atual-> n == nucleo_alvo) {
-            printf(">>>Nucleo %d encontrou e executou a operacao! <<<\n",thread_atual->n);
+        if (thread_atual->n == nucleo_alvo) {
+            printf(">>> Núcleo %d executou a operação especial! <<<\n", thread_atual->n);
             executando = 0;
         } else {
-            printf(">>>Thread %d em espera<<<\n",thread_atual->n);
+            printf(">>> Thread %d em espera...\n", thread_atual->n);
             thread_atual = thread_atual->prox;
         }
     }
-    //Limpeza
+
     printf("\n--- Simulação Finalizada ---\n");
-    printf("Desalocando todos os núcleos...\n");
+}
 
-    //Deletar TODOS os Nos (Um por Um)
+int main() {
+    inicializarGrafo(&grafo);
 
+    int opcao;
+    int a, b, valor;
+
+    // Inicializar com 4 núcleos como antes
+    for (int i = 0; i < 4; i++)
+        inserir_final(i);
+
+    do {
+        menu();
+        scanf("%d", &opcao);
+
+        switch(opcao) {
+
+            case 1:
+                printf("Digite o ID do núcleo: ");
+                scanf("%d", &valor);
+                inserir_No_Inicio(valor);
+                break;
+
+            case 2:
+                printf("Digite o ID do núcleo: ");
+                scanf("%d", &valor);
+                inserir_final(valor);
+                break;
+
+            case 3:
+                mostrar();
+                break;
+
+            case 4:
+                printf("Criar conexao (aresta)\nID 1: ");
+                scanf("%d", &a);
+                printf("ID 2: ");
+                scanf("%d", &b);
+                adicionarAresta(&grafo, a, b);
+                break;
+
+            case 5:
+                mostrarGrafo(&grafo);
+                break;
+
+            case 6:
+                printf("BFS a partir de qual núcleo? ");
+                scanf("%d", &a);
+                BFS(&grafo, a);
+                break;
+
+            case 7:
+                printf("DFS a partir de qual núcleo? ");
+                scanf("%d", &a);
+                DFS(&grafo, a);
+                break;
+
+            case 8:
+                printf("Verificar conexao entre:\nID 1: ");
+                scanf("%d", &a);
+                printf("ID 2: ");
+                scanf("%d", &b);
+
+                if (conectados(&grafo, a, b))
+                    printf("Núcleos %d e %d ESTÃO conectados!\n", a, b);
+                else
+                    printf("Núcleos %d e %d NÃO estão conectados.\n", a, b);
+                break;
+
+            case 9:
+                simuladorCPU();
+                break;
+
+            case 0:
+                printf("Encerrando programa...\n");
+                break;
+
+            default:
+                printf("Opcao invalida!\n");
+        }
+
+    } while(opcao != 0);
+
+    // Limpeza da lista circular
+    printf("\nLimpando memória...\n");
     while (head != NULL) {
         deletar_Elemento_porTecla(head->n);
     }
-    mostrar();
+
     return 0;
 }
